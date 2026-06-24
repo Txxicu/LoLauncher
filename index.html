@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoLauncher</title>
-    <!-- Подключаем иконки FontAwesome для Discord, Почты и Стрелочек FAQ -->
+    <!-- Подключаем иконки FontAwesome для Discord, VK, Почты и Стрелочек -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -31,19 +31,52 @@
             transition: background-image 0.5s ease;
         }
 
-        /* Панель переключения языка */
-        .lang-switcher {
+        /* Выпадающий переключатель языка */
+        .lang-dropdown-container {
             position: absolute;
             top: 20px;
             right: 20px;
-            display: flex;
-            gap: 10px;
-            background: var(--card-bg);
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(5px);
+            display: inline-block;
             z-index: 100;
+        }
+
+        .lang-current-btn {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .lang-current-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .lang-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background: rgba(20, 20, 22, 0.95);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 6px;
+            min-width: 120px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-dropdown-menu.show {
+            display: block;
         }
 
         .lang-btn {
@@ -52,35 +85,45 @@
             color: var(--text-muted);
             font-size: 0.95rem;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            width: 100%;
             font-weight: 500;
+            text-align: left;
         }
 
         .lang-btn:hover {
             color: var(--text-main);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .lang-btn.active {
             color: var(--primary);
-            font-weight: bold;
             background: rgba(0, 255, 136, 0.1);
         }
 
         .flag-icon {
             width: 20px;
-            height: 15px;
+            height: 14px;
             object-fit: cover;
             border-radius: 2px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
-        /* Навигационное меню страницы */
+        .lang-chevron {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .lang-dropdown-container.open .lang-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Навигационное меню */
         nav {
             display: flex;
             justify-content: center;
@@ -108,7 +151,6 @@
             padding: 20px 20px 40px 20px;
         }
 
-        /* Управление видимостью страниц */
         .page {
             display: none;
         }
@@ -117,10 +159,19 @@
             display: block;
         }
 
-        /* Шапка сайта */
+        /* Шапка сайта и Логотип */
         header {
             text-align: center;
-            padding: 40px 0 40px 0;
+            padding: 20px 0 40px 0;
+        }
+
+        .main-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.3));
+            user-select: none;
+            -webkit-user-drag: none;
         }
 
         header h1 {
@@ -181,7 +232,7 @@
             box-shadow: 0 5px 20px rgba(255, 85, 85, 0.3);
         }
 
-        /* Сетка с фичами */
+        /* Сетки, карточки и контент */
         .section-title {
             text-align: center;
             font-size: 2rem;
@@ -229,7 +280,7 @@
             margin-bottom: 8px;
         }
 
-        /* Стили для страницы About (Команда и Тестеры) */
+        /* О проекте / Команда */
         .team-container {
             display: flex;
             justify-content: center;
@@ -263,7 +314,6 @@
             object-fit: cover;
             margin-bottom: 15px;
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-            /* Запрет выделения и перетаскивания */
             user-select: none;
             -webkit-user-drag: none;
         }
@@ -303,7 +353,7 @@
             user-select: none;
         }
 
-        /* Стили для интерактивного FAQ (Аккордеон) */
+        /* FAQ Аккордеон */
         .faq-item {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -356,7 +406,7 @@
         }
 
         .faq-item.active .faq-answer {
-            max-height: 200px; /* Достаточно для текста ответа */
+            max-height: 200px;
             padding: 0 25px 20px 25px;
         }
 
@@ -386,6 +436,10 @@
             color: var(--primary);
         }
 
+        .social-icons a.vk-icon:hover {
+            color: #0077ff; /* Цвет оригинального ВК при наведении */
+        }
+
         footer p {
             margin: 5px 0;
             font-size: 0.95rem;
@@ -401,17 +455,24 @@
 </head>
 <body>
 
-    <!-- Переключатель языка -->
-    <div class="lang-switcher">
-        <button id="lang-btn-en" class="lang-btn" onclick="setLanguage('en')">
-            <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="English"> EN
+    <!-- Выпадающий список языков -->
+    <div class="lang-dropdown-container" id="langContainer">
+        <button class="lang-current-btn" onclick="toggleLangMenu(event)">
+            <img id="current-lang-flag" src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="Flag">
+            <span id="current-lang-text">EN</span>
+            <i class="fa-solid fa-chevron-down lang-chevron"></i>
         </button>
-        <button id="lang-btn-ru" class="lang-btn" onclick="setLanguage('ru')">
-            <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/RU.svg" class="flag-icon" alt="Русский"> RU
-        </button>
+        <div class="lang-dropdown-menu" id="langMenu">
+            <button id="lang-btn-en" class="lang-btn active" onclick="selectLanguage('en')">
+                <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="English"> EN
+            </button>
+            <button id="lang-btn-ru" class="lang-btn" onclick="selectLanguage('ru')">
+                <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/RU.svg" class="flag-icon" alt="Русский"> RU
+            </button>
+        </div>
     </div>
 
-    <!-- Навигация сайта -->
+    <!-- Навигация -->
     <nav>
         <a id="nav-home" class="active" onclick="switchPage('home')">Home</a>
         <a id="nav-about" onclick="switchPage('about')">About</a>
@@ -421,8 +482,9 @@
         
         <!-- СТРАНИЦА: HOME -->
         <div id="page-home" class="page active">
-            <!-- Главный баннер -->
+            <!-- Главный баннер с Логотипом -->
             <header>
+                <img src="images/logo.png" alt="LoLauncher Logo" class="main-logo">
                 <h1>LoLauncher</h1>
                 <p id="hero-desc">A fast, lightweight, and highly customizable Minecraft launcher focused on user experience and seamless integration with modern services like Modrinth and Ely.by.</p>
                 <div class="cta-buttons">
@@ -431,7 +493,7 @@
                 </div>
             </header>
 
-            <!-- Раздел ключевых возможностей -->
+            <!-- Раздел фич -->
             <h2 class="section-title" id="title-features">Key Features</h2>
             <div class="grid">
                 <div class="card">
@@ -482,7 +544,7 @@
                 </div>
             </div>
 
-            <!-- Раздел UX/Удобство -->
+            <!-- Удобство -->
             <h2 class="section-title" id="title-ux">User Experience & Comfort</h2>
             <div class="grid">
                 <div class="card">
@@ -503,7 +565,7 @@
                 </div>
             </div>
 
-            <!-- Раздел FAQ (Часто задаваемые вопросы с аккордеоном) -->
+            <!-- Раздел FAQ -->
             <h2 class="section-title" id="title-faq">Frequently Asked Questions</h2>
             <div style="max-width: 800px; margin: 0 auto;">
                 <div class="faq-item">
@@ -548,7 +610,6 @@
         <div id="page-about" class="page">
             <h2 class="section-title" id="title-team">Project Team</h2>
             <div class="team-container">
-                <!-- Карточка разработчика -->
                 <div class="member-card">
                     <a href="https://github.com/Txxicu" target="_blank" title="Visit GitHub Profile">
                         <img src="https://github.com/Txxicu.png" alt="Txxicu" class="member-avatar" draggable="false" style="cursor: pointer; transition: transform 0.2s ease;">
@@ -560,7 +621,6 @@
 
             <h2 class="section-title" id="title-testers">Testers</h2>
             <div class="team-container">
-                <!-- Карточка тестера -->
                 <div class="member-card">
                     <img src="https://i.pinimg.com/736x/9d/0c/fa/9d0cfac3268cfbb596037deb6cdee30a.jpg" alt="m1sanya" class="member-avatar tester-av" draggable="false">
                     <div class="member-name">m1sanya</div>
@@ -571,9 +631,10 @@
             <div class="thats-all" id="text-thats-all">ну это все))</div>
         </div>
 
-        <!-- Подвал сайта -->
+        <!-- Подвал -->
         <footer>
             <div class="social-icons">
+                <a href="https://vk.com/txxicuteam" target="_blank" class="vk-icon" title="VK Group"><i class="fa-brands fa-vk"></i></a>
                 <a href="https://discord.com/invite/YfNvZ8mYDp" target="_blank" title="Join our Discord"><i class="fa-brands fa-discord"></i></a>
                 <a href="mailto:txxicuteam@gmail.com" title="Contact via Email"><i class="fa-solid fa-envelope"></i></a>
             </div>
@@ -582,7 +643,6 @@
         </footer>
     </div>
 
-    <!-- Скрипт мультиязычности, автоопределения, рандомного фона и FAQ аккордеона -->
     <script>
         const translations = {
             en: {
@@ -651,7 +711,7 @@
                 q3: "Можно ли скачивать моды, сборки и т.д.?",
                 a3: "Да, всё это можно скачивать напрямую через встроенную систему лаунчера.",
                 q4: "Можно ли менять скин в LoLauncher?",
-                a4: "Да, это можно делать через встроенную интеграцию с сервисом ely.by.",
+                a4: "Да, это можно делать через встроенную интеграцию с сервисом Ely.by.",
                 q5: "У меня не запускается игра, что делать?",
                 a5: "Обратитесь в нашу поддержку через Discord или по почте, и мы обязательно поможем!",
                 f1Title: "<i class='fa-solid fa-users'></i> Мультиаккаунтность",
@@ -675,22 +735,38 @@
 
         let currentLang = 'en';
 
-        function setLanguage(lang) {
+        // Переключение меню языков
+        function toggleLangMenu(event) {
+            event.stopPropagation();
+            const container = document.getElementById('langContainer');
+            const menu = document.getElementById('langMenu');
+            
+            container.classList.toggle('open');
+            menu.classList.toggle('show');
+        }
+
+        // Выбор языка из списка
+        function selectLanguage(lang) {
             currentLang = lang;
             
+            // Смена активного класса в меню
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`lang-btn-${lang}`).classList.add('active');
 
+            // Обновление главной кнопки (текст и флаг)
+            const flagUrl = lang === 'en' ? 'GB.svg' : 'RU.svg';
+            document.getElementById('current-lang-flag').src = `https://purecatamphetamine.github.io/country-flag-icons/3x2/${flagUrl}`;
+            document.getElementById('current-lang-text').innerText = lang.toUpperCase();
+
+            // Перевод контента
             document.getElementById('nav-home').innerText = translations[lang].navHome;
             document.getElementById('nav-about').innerText = translations[lang].navAbout;
-
             document.getElementById('hero-desc').innerText = translations[lang].heroDesc;
             document.getElementById('btn-download').innerHTML = translations[lang].btnDownload;
             document.getElementById('btn-donate').innerHTML = translations[lang].btnDonate;
             document.getElementById('title-features').innerText = translations[lang].titleFeatures;
             document.getElementById('title-ux').innerText = translations[lang].titleUx;
             document.getElementById('footer-rights').innerText = translations[lang].footerRights;
-            
             document.getElementById('title-team').innerText = translations[lang].titleTeam;
             document.getElementById('title-testers').innerText = translations[lang].titleTesters;
             document.getElementById('title-faq').innerText = translations[lang].titleFaq;
@@ -698,7 +774,6 @@
             document.getElementById('role-tester').innerText = translations[lang].roleTester;
             document.getElementById('text-thats-all').innerText = translations[lang].textThatsAll;
             
-            // FAQ текст
             document.getElementById('q1').innerText = translations[lang].q1;
             document.getElementById('a1').innerText = translations[lang].a1;
             document.getElementById('q2').innerText = translations[lang].q2;
@@ -729,6 +804,12 @@
             document.getElementById('u2-list').innerHTML = translations[lang].u2List;
         }
 
+        // Закрытие дропдауна при клике мимо него
+        window.addEventListener('click', () => {
+            document.getElementById('langContainer').classList.remove('open');
+            document.getElementById('langMenu').classList.remove('show');
+        });
+
         function switchPage(pageName) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
@@ -739,19 +820,14 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- ЛОГИКА ДЛЯ FAQ (АККОРДЕОН) ---
         function toggleFaq(element) {
             const faqItem = element.parentElement;
-            
-            // Проверяем, активен ли этот пункт уже
             const isActive = faqItem.classList.contains('active');
             
-            // Закрываем все остальные открытые вкладки FAQ (если хочется, чтобы открыта была только одна)
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // Если кликнутый элемент не был активен, то открываем его
             if (!isActive) {
                 faqItem.classList.add('active');
             }
@@ -778,9 +854,9 @@
 
             const userLang = navigator.language || navigator.userLanguage;
             if (userLang.startsWith('ru')) {
-                setLanguage('ru');
+                selectLanguage('ru');
             } else {
-                setLanguage('en');
+                selectLanguage('en');
             }
         });
     </script>
