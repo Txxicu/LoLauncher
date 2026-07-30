@@ -494,8 +494,8 @@
                 <h1>LoLauncher</h1>
                 <p id="hero-desc">A fast, lightweight, and highly customizable Minecraft launcher focused on user experience and seamless integration with modern services like Modrinth and Ely.by.</p>
                 <div class="cta-buttons">
-                    <a href="#" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
-                    <a href="#" class="btn btn-donate" id="btn-donate" onclick="triggerDonate(); return false;"><i class="fa-solid fa-heart"></i> Donate</a>
+                    <a href="https://github.com/Txxicu/LoLauncher/releases/latest" target="_blank" rel="noopener" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
+                    <a href="https://www.donationalerts.com/dashboard/donation-page-settings" target="_blank" rel="noopener" class="btn btn-donate" id="btn-donate"><i class="fa-solid fa-heart"></i> Donate</a>
                 </div>
             </header>
 
@@ -674,7 +674,6 @@
                 roleTester: "Beta Tester",
                 textThatsAll: "well, that's all))",
                 footerRights: "All rights reserved.",
-                donateAlert: "Donation system is currently under development! Thank you for your support.",
                 q1: "Is it free?",
                 a1: "Yes, of course!",
                 q2: "Are there any viruses?",
@@ -717,7 +716,6 @@
                 roleTester: "Бета-тестер",
                 textThatsAll: "ну это все))",
                 footerRights: "Все права защищены.",
-                donateAlert: "Система пожертвований находится в разработке! Спасибо за вашу поддержку.",
                 q1: "Это бесплатно?",
                 a1: "Да, конечно!",
                 q2: "Есть ли вирусы?",
@@ -846,10 +844,6 @@
             if (!isActive) {
                 faqItem.classList.add('active');
             }
-        }
-
-        function triggerDonate() {
-            alert(translations[currentLang].donateAlert);
         }
 
         function setRandomBackground() {
