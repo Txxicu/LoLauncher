@@ -269,6 +269,44 @@
         .win-note i {
             color: #00adef;
         }
+        .hero-draw-area {
+            position: relative;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .draw-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        .draw-clear-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            z-index: 3;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 0.55;
+            transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        .draw-clear-btn:hover {
+            opacity: 1;
+            color: var(--text-main);
+            border-color: var(--primary);
+        }
         .screenshot-wrap {
             margin: 45px auto 0 auto;
             max-width: 900px;
@@ -534,14 +572,20 @@
     <div class="container">
         <div id="page-home" class="page active">
             <header>
-                <img src="images/logo.png" alt="LoLauncher Logo" class="main-logo">
-                <h1>LoLauncher</h1>
-                <p id="hero-desc">A fast, lightweight, and highly customizable Minecraft launcher focused on user experience and seamless integration with modern services like Modrinth and Ely.by.</p>
-                <div class="cta-buttons">
-                    <a href="https://github.com/Txxicu/LoLauncher/releases/latest/download/LoLauncherSetup.exe" target="_blank" rel="noopener" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
-                    <a href="https://www.donationalerts.com/r/txxicuofficial" target="_blank" rel="noopener" class="btn btn-donate" id="btn-donate"><i class="fa-solid fa-heart"></i> Donate</a>
+                <div class="hero-draw-area">
+                    <canvas class="draw-canvas" id="drawCanvas"></canvas>
+                    <button class="draw-clear-btn" id="drawClearBtn" title="Clear drawing"><i class="fa-solid fa-eraser"></i></button>
+                    <div class="hero-content">
+                        <img src="images/logo.png" alt="LoLauncher Logo" class="main-logo">
+                        <h1>LoLauncher</h1>
+                        <p id="hero-desc">A fast, lightweight, and highly customizable Minecraft launcher focused on user experience and seamless integration with modern services like Modrinth and Ely.by.</p>
+                        <div class="cta-buttons">
+                            <a href="https://github.com/Txxicu/LoLauncher/releases/latest/download/LoLauncherSetup.exe" target="_blank" rel="noopener" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
+                            <a href="https://www.donationalerts.com/r/txxicuofficial" target="_blank" rel="noopener" class="btn btn-donate" id="btn-donate"><i class="fa-solid fa-heart"></i> Donate</a>
+                        </div>
+                        <p class="win-note" id="win-note"><i class="fa-brands fa-windows"></i> Currently available for Windows only</p>
+                    </div>
                 </div>
-                <p class="win-note" id="win-note"><i class="fa-brands fa-windows"></i> Currently available for Windows only</p>
 
                 <div class="screenshot-wrap reveal">
                     <img src="https://raw.githubusercontent.com/Txxicu/LoLauncher/main/images/screenshotlauncher.jpg" alt="LoLauncher screenshot">
@@ -960,6 +1004,76 @@
             });
         }
 
+        function initDrawArea() {
+            const canvas = document.getElementById('drawCanvas');
+            const area = canvas ? canvas.parentElement : null;
+            const clearBtn = document.getElementById('drawClearBtn');
+            if (!canvas || !area) return;
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+            let lastX = 0, lastY = 0;
+
+            function resizeCanvas() {
+                const rect = area.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                canvas.style.width = rect.width + 'px';
+                canvas.style.height = rect.height + 'px';
+                ctx.scale(dpr, dpr);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            }
+
+            function startDraw(e) {
+                drawing = true;
+                const p = getPos(e);
+                lastX = p.x;
+                lastY = p.y;
+            }
+
+            function moveDraw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                const p = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(p.x, p.y);
+                ctx.stroke();
+                lastX = p.x;
+                lastY = p.y;
+            }
+
+            function endDraw() {
+                drawing = false;
+            }
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', moveDraw);
+            window.addEventListener('mouseup', endDraw);
+            canvas.addEventListener('touchstart', startDraw, { passive: true });
+            canvas.addEventListener('touchmove', moveDraw, { passive: false });
+            canvas.addEventListener('touchend', endDraw);
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                });
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             setRandomBackground();
 
@@ -972,6 +1086,7 @@
 
             initRevealObserver();
             initScreenshotTilt();
+            initDrawArea();
 
             // Загрузка версии и вставка прямо в кнопку
             fetch('https://api.github.com/repos/Txxicu/LoLauncher/releases/latest')
