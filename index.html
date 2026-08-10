@@ -271,6 +271,8 @@
         }
         .hero-draw-area {
             position: relative;
+            min-height: 320px;
+            padding-bottom: 20px;
         }
         .hero-content {
             position: relative;
@@ -278,7 +280,8 @@
             pointer-events: none;
         }
         .hero-content a,
-        .hero-content button {
+        .hero-content button,
+        .hero-content .btn {
             pointer-events: auto;
         }
         .draw-canvas {
@@ -290,6 +293,7 @@
             z-index: 1;
             cursor: crosshair;
             touch-action: none;
+            /* allow drawing in empty space around buttons */
         }
         .draw-clear-btn {
             position: absolute;
@@ -541,15 +545,21 @@
 
         @media (max-width: 600px) {
             .lang-dropdown-container {
-                position: static;
+                position: relative;
                 display: flex;
                 justify-content: center;
                 margin: 20px auto 0 auto;
+                top: auto;
+                right: auto;
+                z-index: 100;
             }
             .lang-dropdown-menu {
                 left: 50%;
                 right: auto;
+                top: auto;
+                bottom: calc(100% + 5px);
                 transform: translateX(-50%);
+                z-index: 200;
             }
         }
 
@@ -876,6 +886,10 @@
 
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`lang-btn-${lang}`).classList.add('active');
+
+            // Close the language menu
+            document.getElementById('langContainer').classList.remove('open');
+            document.getElementById('langMenu').classList.remove('show');
 
             const flagUrl = lang === 'en' ? 'GB.svg' : 'RU.svg';
             document.getElementById('current-lang-flag').src = `https://purecatamphetamine.github.io/country-flag-icons/3x2/${flagUrl}`;
