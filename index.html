@@ -349,18 +349,22 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
+            align-items: stretch;
         }
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            padding: 30px;
+            padding: 28px 26px;
             border-radius: 12px;
             backdrop-filter: blur(8px);
             box-shadow: 0 15px 35px rgba(0, 255, 136, 0);
             transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s ease, box-shadow 0.6s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         .card:hover {
             transform: translateY(-5px);
@@ -379,6 +383,7 @@
             padding-left: 20px;
             margin: 0;
             color: var(--text-muted);
+            flex: 1;
         }
         .card ul li {
             margin-bottom: 8px;
@@ -543,6 +548,16 @@
             font-style: italic;
         }
 
+        @media (min-width: 1000px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (min-width: 1300px) {
+            .grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
         @media (max-width: 600px) {
             .lang-dropdown-container {
                 position: relative;
@@ -560,6 +575,9 @@
                 bottom: calc(100% + 5px);
                 transform: translateX(-50%);
                 z-index: 200;
+            }
+            .grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -634,6 +652,7 @@
                     <h3 id="f4-title"><i class="fa-solid fa-cubes"></i> Modrinth Integration</h3>
                     <ul id="f4-list">
                         <li>Built-in catalog to search, discover, and download mods, shaders, and resource packs directly inside the launcher interface without opening a browser.</li>
+                        <li><strong>Smart recommendations:</strong> Suggested mods and packs tailored for different Minecraft versions.</li>
                     </ul>
                 </div>
                 <div class="card reveal">
@@ -646,6 +665,18 @@
                     <h3 id="f6-title"><i class="fa-solid fa-gamepad"></i> Discord Rich Presence</h3>
                     <ul id="f6-list">
                         <li>Show off your live game status on Discord, including your current Minecraft version, nickname, and total playtime.</li>
+                    </ul>
+                </div>
+                <div class="card reveal">
+                    <h3 id="f7-title"><i class="fa-solid fa-cloud-arrow-down"></i> Auto-Update</h3>
+                    <ul id="f7-list">
+                        <li>When you launch the launcher, a convenient window appears if a new version is available — one click to update.</li>
+                    </ul>
+                </div>
+                <div class="card reveal">
+                    <h3 id="f8-title"><i class="fa-solid fa-images"></i> Screenshot Manager</h3>
+                    <ul id="f8-list">
+                        <li>Built-in gallery that stores all your Minecraft screenshots. View, rename, delete and organize them without leaving the launcher.</li>
                     </ul>
                 </div>
             </div>
@@ -665,6 +696,7 @@
                         <li>Uses native Windows API (via JNA) for modern Windows 10/11 style file dialogs.</li>
                         <li><strong>Java Automation:</strong> Automatically detects and installs the correct Java version required for each specific Minecraft version.</li>
                         <li><strong>Debug Console:</strong> Clear log window with error filtering to easily find mod crash causes.</li>
+                        <li><strong>Settings panel:</strong> Convenient settings with resolution options and other preferences.</li>
                     </ul>
                 </div>
             </div>
@@ -811,15 +843,19 @@
                 f3Title: "<i class='fa-solid fa-code-branch'></i> Advanced Version Manager",
                 f3List: "<li>Supports all official versions (Releases, Snapshots, Alpha, Beta).</li><li>Automated installation of popular mod loaders: <strong>Forge, Fabric, Quilt</strong>.</li><li>Built-in <strong>OptiFine</strong> support.</li>",
                 f4Title: "<i class='fa-solid fa-cubes'></i> Modrinth Integration",
-                f4List: "<li>Built-in catalog to search, discover, and download mods, shaders, and resource packs directly inside the launcher interface without opening a browser.</li>",
+                f4List: "<li>Built-in catalog to search, discover, and download mods, shaders, and resource packs directly inside the launcher interface without opening a browser.</li><li><strong>Smart recommendations:</strong> Suggested mods and packs tailored for different Minecraft versions.</li>",
                 f5Title: "<i class='fa-solid fa-cloud-sun'></i> Offline Capability",
                 f5List: "<li>The launcher caches version manifests. If there is no internet connection, you can still easily launch any previously downloaded game version.</li>",
                 f6Title: "<i class='fa-solid fa-gamepad'></i> Discord Rich Presence",
                 f6List: "<li>Show off your live game status on Discord, including your current Minecraft version, nickname, and total playtime.</li>",
+                f7Title: "<i class='fa-solid fa-cloud-arrow-down'></i> Auto-Update",
+                f7List: "<li>When you launch the launcher, a convenient window appears if a new version is available — one click to update.</li>",
+                f8Title: "<i class='fa-solid fa-images'></i> Screenshot Manager",
+                f8List: "<li>Built-in gallery that stores all your Minecraft screenshots. View, rename, delete and organize them without leaving the launcher.</li>",
                 u1Title: "<i class='fa-solid fa-bolt'></i> Ultimate Performance",
                 u1List: "<li><strong>Instant Account Switching:</strong> Thanks to memory texture caching, profiles swap instantly without network delays.</li><li><strong>Blazing Fast Startup:</strong> No heavy web engines like Electron inside. Clean, native-like speed.</li>",
                 u2Title: "<i class='fa-solid fa-window-restore'></i> Modern UI & Automation",
-                u2List: "<li>Uses native Windows API (via JNA) for modern Windows 10/11 style file dialogs.</li><li><strong>Java Automation:</strong> Automatically detects and installs the correct Java version required for each specific Minecraft version.</li><li><strong>Debug Console:</strong> Clear log window with error filtering to easily find mod crash causes.</li>"
+                u2List: "<li>Uses native Windows API (via JNA) for modern Windows 10/11 style file dialogs.</li><li><strong>Java Automation:</strong> Automatically detects and installs the correct Java version required for each specific Minecraft version.</li><li><strong>Debug Console:</strong> Clear log window with error filtering to easily find mod crash causes.</li><li><strong>Settings panel:</strong> Convenient settings with resolution options and other preferences.</li>"
             },
             ru: {
                 navHome: "Главная",
@@ -858,15 +894,19 @@
                 f3Title: "<i class='fa-solid fa-code-branch'></i> Менеджер версий",
                 f3List: "<li>Поддержка всех официальных версий (Release, Snapshot, Alpha, Beta).</li><li>Автоматическая установка загрузчиков: <strong>Forge, Fabric, Quilt</strong>.</li><li>Встроенная поддержка <strong>OptiFine</strong>.</li>",
                 f4Title: "<i class='fa-solid fa-cubes'></i> Интеграция с Modrinth",
-                f4List: "<li>Встроенный каталог для поиска и скачивания модов, шейдеров и ресурспаков напрямую через интерфейс лаунчера.</li>",
+                f4List: "<li>Встроенный каталог для поиска и скачивания модов, шейдеров и ресурспаков напрямую через интерфейс лаунчера.</li><li><strong>Умные рекомендации:</strong> Подборки модов и паков, подходящие под разные версии Minecraft.</li>",
                 f5Title: "<i class='fa-solid fa-cloud-sun'></i> Оффлайн-режим",
                 f5List: "<li>Лаунчер кэширует манифест версий. Если интернет отсутствует, пользователь всё равно может запустить любую ранее скачанную версию игры.</li>",
                 f6Title: "<i class='fa-solid fa-gamepad'></i> Discord Rich Presence",
                 f6List: "<li>Отображение статуса игры в профиле Discord (версия, ник, время в игре).</li>",
+                f7Title: "<i class='fa-solid fa-cloud-arrow-down'></i> Автообновление",
+                f7List: "<li>При запуске лаунчера появляется удобное окно, если вышла новая версия — обновление в один клик.</li>",
+                f8Title: "<i class='fa-solid fa-images'></i> Менеджер скриншотов",
+                f8List: "<li>Встроенная галерея, в которой хранятся все скриншоты из Minecraft. Можно просматривать, переименовывать, удалять и упорядочивать прямо в лаунчере.</li>",
                 u1Title: "<i class='fa-solid fa-bolt'></i> Максимальная скорость",
                 u1List: "<li><strong>Мгновенное переключение:</strong> Смена профилей происходит моментально без задержек на загрузку из сети.</li><li><strong>Быстрый запуск:</strong> Лаунчер запускается быстрее аналогов за счет отсутствия тяжелых веб-движков внутри (как Electron).</li>",
                 u2Title: "<i class='fa-solid fa-window-restore'></i> Современный UI и автоматизация",
-                u2List: "<li>Использует нативные вызовы Windows API (через JNA) для открытия современных окон Проводника (стиль Win 10/11).</li><li><strong>Автоматизация Java:</strong> Сам определяет необходимую версию Java для каждой версии Minecraft и ставит её автоматически.</li><li><strong>Консоль отладки:</strong> Наглядное окно логов с фильтрацией ошибок, помогающее понять причину вылета модов.</li>"
+                u2List: "<li>Использует нативные вызовы Windows API (через JNA) для открытия современных окон Проводника (стиль Win 10/11).</li><li><strong>Автоматизация Java:</strong> Сам определяет необходимую версию Java для каждой версии Minecraft и ставит её автоматически.</li><li><strong>Консоль отладки:</strong> Наглядное окно логов с фильтрацией ошибок, помогающее понять причину вылета модов.</li><li><strong>Панель настроек:</strong> Удобные настройки с выбором разрешения и другими параметрами.</li>"
             }
         };
 
@@ -941,6 +981,10 @@
             document.getElementById('f5-list').innerHTML = translations[lang].f5List;
             document.getElementById('f6-title').innerHTML = translations[lang].f6Title;
             document.getElementById('f6-list').innerHTML = translations[lang].f6List;
+            document.getElementById('f7-title').innerHTML = translations[lang].f7Title;
+            document.getElementById('f7-list').innerHTML = translations[lang].f7List;
+            document.getElementById('f8-title').innerHTML = translations[lang].f8Title;
+            document.getElementById('f8-list').innerHTML = translations[lang].f8List;
 
             document.getElementById('u1-title').innerHTML = translations[lang].u1Title;
             document.getElementById('u1-list').innerHTML = translations[lang].u1List;
