@@ -280,12 +280,17 @@
             perspective: 1000px;
             transition: transform 0.15s ease-out;
             will-change: transform;
+            aspect-ratio: 16 / 9;
+            background: #000;
         }
         .screenshot-wrap img {
             width: 100%;
+            height: 100%;
             display: block;
+            object-fit: cover;
+            object-position: center;
             pointer-events: none;
-            transform: scale(1.08);
+            transform: scale(1.04);
             transition: transform 0.15s ease-out;
             will-change: transform;
         }
@@ -919,8 +924,8 @@
             const wrap = document.querySelector('.screenshot-wrap');
             const img = wrap ? wrap.querySelector('img') : null;
             if (!wrap || !img) return;
-            const maxTilt = 12;
-            const parallaxStrength = 25;
+            const maxTilt = 10;
+            const parallaxStrength = 10;
 
             wrap.addEventListener('mousemove', (e) => {
                 const rect = wrap.getBoundingClientRect();
@@ -935,14 +940,14 @@
                 // Parallax: image shifts opposite to tilt, creating depth
                 const moveX = -percentX * parallaxStrength;
                 const moveY = -percentY * parallaxStrength;
-                img.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.08)`;
+                img.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.04)`;
             });
 
             wrap.addEventListener('mouseleave', () => {
                 wrap.style.transition = 'transform 0.5s ease';
                 wrap.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
                 img.style.transition = 'transform 0.5s ease';
-                img.style.transform = 'translate(0px, 0px) scale(1.08)';
+                img.style.transform = 'translate(0px, 0px) scale(1.04)';
                 setTimeout(() => {
                     wrap.style.transition = 'transform 0.15s ease-out';
                     img.style.transition = 'transform 0.15s ease-out';
