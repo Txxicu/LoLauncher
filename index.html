@@ -16,6 +16,28 @@
             --text-main: #ffffff;
             --text-muted: #a0a0a5;
         }
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), #00996b);
+            border-radius: 10px;
+            border: 3px solid var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--primary-hover), #00b37a);
+        }
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-dark);
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-dark);
@@ -123,9 +145,24 @@
             transition: color 0.2s;
             cursor: pointer;
             padding: 5px 10px;
+            position: relative;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -4px;
+            width: 0%;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease, left 0.3s ease;
         }
         nav a:hover, nav a.active {
             color: var(--primary);
+        }
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+            left: 0%;
         }
         .container {
             max-width: 1100px;
@@ -137,6 +174,11 @@
         }
         .page.active {
             display: block;
+            animation: pageFadeIn 0.5s ease;
+        }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         header {
             text-align: center;
@@ -149,6 +191,11 @@
             filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
             user-select: none;
             -webkit-user-drag: none;
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
         header h1 {
             font-size: 3.5rem;
@@ -176,7 +223,7 @@
             font-weight: bold;
             text-decoration: none;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             cursor: pointer;
         }
         .btn-primary {
@@ -185,8 +232,8 @@
         }
         .btn-primary:hover {
             background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
         }
         .btn-donate {
             background-color: transparent;
@@ -196,8 +243,48 @@
         .btn-donate:hover {
             background-color: #ff5555;
             color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 85, 85, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 85, 85, 0.3);
+        }
+        .btn-skins {
+            background-color: transparent;
+            color: #00bfff;
+            border: 2px solid #00bfff;
+        }
+        .btn-skins:hover {
+            background-color: #00bfff;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.35);
+        }
+        .win-note {
+            margin: 18px auto 0 auto;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .win-note i {
+            color: var(--primary);
+        }
+        .screenshot-wrap {
+            margin: 45px auto 0 auto;
+            max-width: 900px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .screenshot-wrap:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 25px 60px rgba(0, 255, 136, 0.15);
+        }
+        .screenshot-wrap img {
+            width: 100%;
+            display: block;
         }
         .section-title {
             text-align: center;
@@ -217,11 +304,12 @@
             padding: 30px;
             border-radius: 12px;
             backdrop-filter: blur(8px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
             transform: translateY(-5px);
             border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(0, 255, 136, 0.12);
         }
         .card h3 {
             color: var(--primary);
@@ -256,10 +344,11 @@
             width: 100%;
             backdrop-filter: blur(8px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .member-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
         }
         .member-avatar {
             width: 120px;
@@ -271,6 +360,10 @@
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
             user-select: none;
             -webkit-user-drag: none;
+            transition: transform 0.3s ease;
+        }
+        .member-card:hover .member-avatar {
+            transform: scale(1.06);
         }
         .member-avatar.tester-av {
             border-color: #00bfff;
@@ -365,14 +458,20 @@
         .social-icons a {
             color: var(--text-muted);
             font-size: 1.8rem;
-            transition: color 0.2s;
+            transition: color 0.2s, transform 0.2s;
             text-decoration: none;
+        }
+        .social-icons a:hover {
+            transform: translateY(-3px);
         }
         .social-icons a.discord-icon:hover {
             color: #5865F2;
         }
         .social-icons a.vk-icon:hover {
             color: #0077ff;
+        }
+        .social-icons a.github-icon:hover {
+            color: #ffffff;
         }
         .social-icons a.email-icon:hover {
             color: #00ff88;
@@ -386,6 +485,17 @@
             font-size: 0.85rem !important;
             margin-top: 15px !important;
             font-style: italic;
+        }
+
+        /* Scroll reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -408,6 +518,7 @@
 
     <nav>
         <a id="nav-home" class="active" onclick="switchPage('home')">Home</a>
+        <a id="nav-skins" href="https://ely.by/skins" target="_blank" rel="noopener">Skins</a>
         <a id="nav-about" onclick="switchPage('about')">About</a>
     </nav>
 
@@ -421,11 +532,16 @@
                     <a href="https://github.com/Txxicu/LoLauncher/releases/latest/download/LoLauncherSetup.exe" target="_blank" rel="noopener" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
                     <a href="https://www.donationalerts.com/r/txxicuofficial" target="_blank" rel="noopener" class="btn btn-donate" id="btn-donate"><i class="fa-solid fa-heart"></i> Donate</a>
                 </div>
+                <p class="win-note" id="win-note"><i class="fa-brands fa-windows"></i> Currently available for Windows only</p>
+
+                <div class="screenshot-wrap reveal">
+                    <img src="https://raw.githubusercontent.com/Txxicu/LoLauncher/main/images/screenshotlauncher.jpg" alt="LoLauncher screenshot">
+                </div>
             </header>
 
             <h2 class="section-title" id="title-features">Key Features</h2>
             <div class="grid">
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="f1-title"><i class="fa-solid fa-users"></i> Multi-Account System</h3>
                     <ul id="f1-list">
                         <li><strong>Offline Mode:</strong> Play under any nickname without a password.</li>
@@ -433,14 +549,14 @@
                         <li><strong>Ely.by Integration:</strong> Full support for the popular skin and auth service.</li>
                     </ul>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="f2-title"><i class="fa-solid fa-shirt"></i> Smart Skin Management</h3>
                     <ul id="f2-list">
                         <li>Priority skin & cape loading from Ely.by and Mojang.</li>
                         <li><strong>Custom Avatars:</strong> Upload any photo and crop/rotate it with an in-app built-in editor.</li>
                     </ul>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="f3-title"><i class="fa-solid fa-code-branch"></i> Advanced Version Manager</h3>
                     <ul id="f3-list">
                         <li>Supports all official versions (Releases, Snapshots, Alpha, Beta).</li>
@@ -448,19 +564,19 @@
                         <li>Built-in <strong>OptiFine</strong> support.</li>
                     </ul>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="f4-title"><i class="fa-solid fa-cubes"></i> Modrinth Integration</h3>
                     <ul id="f4-list">
                         <li>Built-in catalog to search, discover, and download mods, shaders, and resource packs directly inside the launcher interface without opening a browser.</li>
                     </ul>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="f5-title"><i class="fa-solid fa-cloud-sun"></i> Offline Capability</h3>
                     <ul id="f5-list">
                         <li>The launcher caches version manifests. If there is no internet connection, you can still easily launch any previously downloaded game version.</li>
                     </ul>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="f6-title"><i class="fa-solid fa-gamepad"></i> Discord Rich Presence</h3>
                     <ul id="f6-list">
                         <li>Show off your live game status on Discord, including your current Minecraft version, nickname, and total playtime.</li>
@@ -470,14 +586,14 @@
 
             <h2 class="section-title" id="title-ux">User Experience & Comfort</h2>
             <div class="grid">
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="u1-title"><i class="fa-solid fa-bolt"></i> Ultimate Performance</h3>
                     <ul id="u1-list">
                         <li><strong>Instant Account Switching:</strong> Thanks to memory texture caching, profiles swap instantly without network delays.</li>
                         <li><strong>Blazing Fast Startup:</strong> No heavy web engines like Electron inside. Clean, native-like speed.</li>
                     </ul>
                 </div>
-                <div class="card">
+                <div class="card reveal">
                     <h3 id="u2-title"><i class="fa-solid fa-window-restore"></i> Modern UI & Automation</h3>
                     <ul id="u2-list">
                         <li>Uses native Windows API (via JNA) for modern Windows 10/11 style file dialogs.</li>
@@ -489,35 +605,35 @@
 
             <h2 class="section-title" id="title-faq">Frequently Asked Questions</h2>
             <div style="max-width: 800px; margin: 0 auto;">
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span id="q1">Is it free?</span>
                         <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
                     </div>
                     <div class="faq-answer" id="a1">Yes, of course!</div>
                 </div>
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span id="q2">Are there any viruses?</span>
                         <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
                     </div>
                     <div class="faq-answer" id="a2">No, as long as you downloaded it from this official website.</div>
                 </div>
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span id="q3">Can I download mods, modpacks, etc.?</span>
                         <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
                     </div>
                     <div class="faq-answer" id="a3">Yes, you can download everything directly through the built-in system.</div>
                 </div>
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span id="q4">Can I change my skin in LoLauncher?</span>
                         <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
                     </div>
                     <div class="faq-answer" id="a4">Yes, you can easily do that through the Ely.by service.</div>
                 </div>
-                <div class="faq-item">
+                <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span id="q5">My game won't launch, what should I do?</span>
                         <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
@@ -530,7 +646,7 @@
         <div id="page-about" class="page">
             <h2 class="section-title" id="title-team">Project Team</h2>
             <div class="team-container">
-                <div class="member-card">
+                <div class="member-card reveal">
                     <a href="https://github.com/Txxicu" target="_blank" title="Visit GitHub Profile">
                         <img src="https://github.com/Txxicu.png" alt="Txxicu" class="member-avatar" draggable="false" style="cursor: pointer; transition: transform 0.2s ease;">
                     </a>
@@ -541,12 +657,12 @@
 
             <h2 class="section-title" id="title-testers">Testers</h2>
             <div class="team-container">
-                <div class="member-card">
+                <div class="member-card reveal">
                     <img src="https://i.pinimg.com/736x/9d/0c/fa/9d0cfac3268cfbb596037deb6cdee30a.jpg" alt="m1sanya" class="member-avatar tester-av" draggable="false">
                     <div class="member-name">m1sanya</div>
                     <div class="member-role tester-role" id="role-tester-1">Beta Tester</div>
                 </div>
-                <div class="member-card">
+                <div class="member-card reveal">
                     <img src="https://kz-namepics.ru/imgbig/16899.jpg" alt="vni1ik" class="member-avatar tester-av" draggable="false">
                     <div class="member-name">vni1ik</div>
                     <div class="member-role tester-role" id="role-tester-2">Beta Tester</div>
@@ -559,6 +675,7 @@
             <div class="social-icons">
                 <a href="https://discord.com/invite/YfNvZ8mYDp" target="_blank" class="discord-icon" title="Join our Discord"><i class="fa-brands fa-discord"></i></a>
                 <a href="https://vk.com/txxicuteam" target="_blank" class="vk-icon" title="VK Group"><i class="fa-brands fa-vk"></i></a>
+                <a href="https://github.com/Txxicu/LoLauncher" target="_blank" class="github-icon" title="GitHub Repository"><i class="fa-brands fa-github"></i></a>
                 <a href="mailto:txxicuteam@gmail.com" class="email-icon" title="Contact via Email"><i class="fa-solid fa-envelope"></i></a>
             </div>
             <p>© 2026 LoLauncher. <span id="footer-rights">All rights reserved.</span></p>
@@ -570,10 +687,13 @@
         const translations = {
             en: {
                 navHome: "Home",
+                navSkins: "Skins",
                 navAbout: "About",
                 heroDesc: "A fast, lightweight, and highly customizable Minecraft launcher focused on user experience and seamless integration with modern services like Modrinth and Ely.by.",
                 btnDownload: "<i class='fa-solid fa-download'></i> Download Now",
+                btnSkins: "<i class='fa-solid fa-shirt'></i> Skins",
                 btnDonate: "<i class='fa-solid fa-heart'></i> Donate",
+                winNote: "<i class='fa-brands fa-windows'></i> Currently available for Windows only",
                 titleFeatures: "Key Features",
                 titleUx: "User Experience & Comfort",
                 titleTeam: "Project Team",
@@ -612,10 +732,13 @@
             },
             ru: {
                 navHome: "Главная",
+                navSkins: "Скины",
                 navAbout: "О проекте",
                 heroDesc: "Быстрый, легкий и кастомизируемый лаунчер для Minecraft, ориентированный на удобство пользователя и интеграцию с современными сервисами (Ely.by, Modrinth).",
                 btnDownload: "<i class='fa-solid fa-download'></i> Скачать",
+                btnSkins: "<i class='fa-solid fa-shirt'></i> Скины",
                 btnDonate: "<i class='fa-solid fa-heart'></i> Донат",
+                winNote: "<i class='fa-brands fa-windows'></i> На данный момент доступно только для Windows",
                 titleFeatures: "Ключевые функции",
                 titleUx: "Удобство и UX",
                 titleTeam: "Команда проекта",
@@ -681,8 +804,10 @@
             
             const versionText = window.latestVersion ? ' ' + window.latestVersion : '';
             document.getElementById('btn-download').innerHTML = translations[lang].btnDownload + versionText;
-            
             document.getElementById('btn-donate').innerHTML = translations[lang].btnDonate;
+            document.getElementById('nav-skins').innerText = translations[lang].navSkins;
+            document.getElementById('win-note').innerHTML = translations[lang].winNote;
+
             document.getElementById('title-features').innerText = translations[lang].titleFeatures;
             document.getElementById('title-ux').innerText = translations[lang].titleUx;
             document.getElementById('footer-rights').innerText = translations[lang].footerRights;
@@ -735,6 +860,7 @@
             document.getElementById(`page-${pageName}`).classList.add('active');
             document.getElementById(`nav-${pageName}`).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            initRevealObserver();
         }
 
         function toggleFaq(element) {
@@ -757,6 +883,21 @@
             document.body.style.backgroundImage = `linear-gradient(rgba(18, 18, 20, 0.85), rgba(18, 18, 20, 0.85)), url('${wallpapers[randomIndex]}')`;
         }
 
+        let revealObserver;
+        function initRevealObserver() {
+            if (!revealObserver) {
+                revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15 });
+            }
+            document.querySelectorAll('.reveal:not(.visible)').forEach(el => revealObserver.observe(el));
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             setRandomBackground();
 
@@ -766,6 +907,8 @@
             } else {
                 selectLanguage('en');
             }
+
+            initRevealObserver();
 
             // Загрузка версии и вставка прямо в кнопку
             fetch('https://api.github.com/repos/Txxicu/LoLauncher/releases/latest')
