@@ -1,1 +1,2 @@
-# LoLauncher Site Minecraft Launcher
+# LoLauncher Minecraft Launcher
+
