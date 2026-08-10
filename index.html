@@ -285,6 +285,9 @@
             width: 100%;
             display: block;
             pointer-events: none;
+            transform: scale(1.08);
+            transition: transform 0.15s ease-out;
+            will-change: transform;
         }
         .section-title {
             text-align: center;
@@ -305,7 +308,7 @@
             border-radius: 12px;
             backdrop-filter: blur(8px);
             box-shadow: 0 15px 35px rgba(0, 255, 136, 0);
-            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s ease, box-shadow 0.6s ease;
         }
         .card:hover {
             transform: translateY(-5px);
@@ -636,6 +639,13 @@
                 </div>
                 <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
+                        <span id="q6">Can I play with my own Mojang skin?</span>
+                        <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+                    </div>
+                    <div class="faq-answer" id="a6">Yes, no problem at all.</div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
                         <span id="q5">My game won't launch, what should I do?</span>
                         <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
                     </div>
@@ -712,6 +722,8 @@
                 a3: "Yes, you can download everything directly through the built-in system.",
                 q4: "Can I change my skin in LoLauncher?",
                 a4: "Yes, you can easily do that through the Ely.by service.",
+                q6: "Can I play with my own Mojang skin?",
+                a6: "Yes, no problem at all.",
                 q5: "My game won't launch, what should I do?",
                 a5: "Please contact our support team via Discord or Email, and we will help you!",
                 f1Title: "<i class='fa-solid fa-users'></i> Multi-Account System",
@@ -757,6 +769,8 @@
                 a3: "Да, всё это можно скачивать напрямую через встроенную систему лаунчера.",
                 q4: "Можно ли менять скин в LoLauncher?",
                 a4: "Да, это можно делать через встроенную интеграцию с сервисом Ely.by.",
+                q6: "Можно ли играть со своим скином из Mojang?",
+                a6: "Да, можно без проблем.",
                 q5: "У меня не запускается игра, что делать?",
                 a5: "Обратитесь в нашу поддержку через Discord или по почте, и мы обязательно поможем!",
                 f1Title: "<i class='fa-solid fa-users'></i> Мультиаккаунтность",
@@ -828,6 +842,8 @@
             document.getElementById('a3').innerText = translations[lang].a3;
             document.getElementById('q4').innerText = translations[lang].q4;
             document.getElementById('a4').innerText = translations[lang].a4;
+            document.getElementById('q6').innerText = translations[lang].q6;
+            document.getElementById('a6').innerText = translations[lang].a6;
             document.getElementById('q5').innerText = translations[lang].q5;
             document.getElementById('a5').innerText = translations[lang].a5;
 
@@ -901,8 +917,10 @@
 
         function initScreenshotTilt() {
             const wrap = document.querySelector('.screenshot-wrap');
-            if (!wrap) return;
+            const img = wrap ? wrap.querySelector('img') : null;
+            if (!wrap || !img) return;
             const maxTilt = 12;
+            const parallaxStrength = 25;
 
             wrap.addEventListener('mousemove', (e) => {
                 const rect = wrap.getBoundingClientRect();
@@ -913,16 +931,27 @@
                 const rotateY = percentX * maxTilt * 2;
                 const rotateX = -percentY * maxTilt * 2;
                 wrap.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+
+                // Parallax: image shifts opposite to tilt, creating depth
+                const moveX = -percentX * parallaxStrength;
+                const moveY = -percentY * parallaxStrength;
+                img.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.08)`;
             });
 
             wrap.addEventListener('mouseleave', () => {
                 wrap.style.transition = 'transform 0.5s ease';
                 wrap.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-                setTimeout(() => { wrap.style.transition = 'transform 0.15s ease-out'; }, 500);
+                img.style.transition = 'transform 0.5s ease';
+                img.style.transform = 'translate(0px, 0px) scale(1.08)';
+                setTimeout(() => {
+                    wrap.style.transition = 'transform 0.15s ease-out';
+                    img.style.transition = 'transform 0.15s ease-out';
+                }, 500);
             });
 
             wrap.addEventListener('mouseenter', () => {
                 wrap.style.transition = 'transform 0.15s ease-out';
+                img.style.transition = 'transform 0.15s ease-out';
             });
         }
 
@@ -937,6 +966,7 @@
             }
 
             initRevealObserver();
+            initScreenshotTilt();
 
             // Загрузка версии и вставка прямо в кнопку
             fetch('https://api.github.com/repos/Txxicu/LoLauncher/releases/latest')
