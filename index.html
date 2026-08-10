@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoLauncher</title>
     <link rel="icon" type="image/png" href="images/logo.png">
-    <!-- Подключаем иконки FontAwesome для Discord, VK, Почты и Стрелочек -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -30,7 +29,6 @@
             line-height: 1.6;
             transition: background-image 0.5s ease;
         }
-        /* Выпадающий переключатель языка */
         .lang-dropdown-container {
             position: absolute;
             top: 20px;
@@ -111,26 +109,6 @@
         .lang-dropdown-container.open .lang-chevron {
             transform: rotate(180deg);
         }
-        .download-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .version-badge {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        .version-badge.loading {
-            opacity: 0.6;
-        }
-        /* Навигационное меню */
         nav {
             display: flex;
             justify-content: center;
@@ -160,7 +138,6 @@
         .page.active {
             display: block;
         }
-        /* Шапка сайта и Логотип */
         header {
             text-align: center;
             padding: 20px 0 40px 0;
@@ -222,7 +199,6 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(255, 85, 85, 0.3);
         }
-        /* Сетки, карточки и контент */
         .section-title {
             text-align: center;
             font-size: 2rem;
@@ -263,7 +239,6 @@
         .card ul li {
             margin-bottom: 8px;
         }
-        /* О проекте / Команда */
         .team-container {
             display: flex;
             justify-content: center;
@@ -327,7 +302,6 @@
             font-style: italic;
             user-select: none;
         }
-        /* FAQ Аккордеон */
         .faq-item {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -340,7 +314,6 @@
         .faq-item:hover {
             border-color: rgba(0, 255, 136, 0.4);
         }
-       
         .faq-question {
             padding: 18px 25px;
             font-size: 1.1rem;
@@ -365,7 +338,6 @@
             transform: rotate(180deg);
             color: var(--primary);
         }
-       
         .faq-answer {
             max-height: 0;
             overflow: hidden;
@@ -378,7 +350,6 @@
             max-height: 200px;
             padding: 0 25px 20px 25px;
         }
-        /* Футер */
         footer {
             text-align: center;
             margin-top: 80px;
@@ -419,7 +390,6 @@
     </style>
 </head>
 <body>
-    <!-- Выпадающий список языков -->
     <div class="lang-dropdown-container" id="langContainer">
         <button class="lang-current-btn" onclick="toggleLangMenu(event)">
             <img id="current-lang-flag" src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="Flag">
@@ -435,29 +405,24 @@
             </button>
         </div>
     </div>
-    <!-- Навигация -->
+
     <nav>
         <a id="nav-home" class="active" onclick="switchPage('home')">Home</a>
         <a id="nav-about" onclick="switchPage('about')">About</a>
     </nav>
+
     <div class="container">
-       
-        <!-- СТРАНИЦА: HOME -->
         <div id="page-home" class="page active">
-            <!-- Главный баннер с Логотипом -->
             <header>
                 <img src="images/logo.png" alt="LoLauncher Logo" class="main-logo">
                 <h1>LoLauncher</h1>
                 <p id="hero-desc">A fast, lightweight, and highly customizable Minecraft launcher focused on user experience and seamless integration with modern services like Modrinth and Ely.by.</p>
                 <div class="cta-buttons">
-                    <div class="download-wrapper">
-                        <a href="https://github.com/Txxicu/LoLauncher/releases/latest/download/LoLauncherSetup.exe" target="_blank" rel="noopener" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
-                        <span id="version-badge" class="version-badge loading">Latest</span>
-                    </div>
+                    <a href="https://github.com/Txxicu/LoLauncher/releases/latest/download/LoLauncherSetup.exe" target="_blank" rel="noopener" class="btn btn-primary" id="btn-download"><i class="fa-solid fa-download"></i> Download Now</a>
                     <a href="https://www.donationalerts.com/r/txxicuofficial" target="_blank" rel="noopener" class="btn btn-donate" id="btn-donate"><i class="fa-solid fa-heart"></i> Donate</a>
                 </div>
             </header>
-            <!-- Раздел фич -->
+
             <h2 class="section-title" id="title-features">Key Features</h2>
             <div class="grid">
                 <div class="card">
@@ -502,7 +467,7 @@
                     </ul>
                 </div>
             </div>
-            <!-- Удобство -->
+
             <h2 class="section-title" id="title-ux">User Experience & Comfort</h2>
             <div class="grid">
                 <div class="card">
@@ -521,7 +486,7 @@
                     </ul>
                 </div>
             </div>
-            <!-- Раздел FAQ -->
+
             <h2 class="section-title" id="title-faq">Frequently Asked Questions</h2>
             <div style="max-width: 800px; margin: 0 auto;">
                 <div class="faq-item">
@@ -561,7 +526,7 @@
                 </div>
             </div>
         </div>
-        <!-- СТРАНИЦА: ABOUT -->
+
         <div id="page-about" class="page">
             <h2 class="section-title" id="title-team">Project Team</h2>
             <div class="team-container">
@@ -573,6 +538,7 @@
                     <div class="member-role" id="role-developer">Lead Developer</div>
                 </div>
             </div>
+
             <h2 class="section-title" id="title-testers">Testers</h2>
             <div class="team-container">
                 <div class="member-card">
@@ -588,7 +554,7 @@
             </div>
             <div class="thats-all" id="text-thats-all">ну это все))</div>
         </div>
-        <!-- Подвал -->
+
         <footer>
             <div class="social-icons">
                 <a href="https://discord.com/invite/YfNvZ8mYDp" target="_blank" class="discord-icon" title="Join our Discord"><i class="fa-brands fa-discord"></i></a>
@@ -599,6 +565,7 @@
             <p class="disclaimer">Not affiliated with Mojang or Microsoft.</p>
         </footer>
     </div>
+
     <script>
         const translations = {
             en: {
@@ -686,7 +653,9 @@
                 u2List: "<li>Использует нативные вызовы Windows API (через JNA) для открытия современных окон Проводника (стиль Win 10/11).</li><li><strong>Автоматизация Java:</strong> Сам определяет необходимую версию Java для каждой версии Minecraft и ставит её автоматически.</li><li><strong>Консоль отладки:</strong> Наглядное окно логов с фильтрацией ошибок, помогающее понять причину вылета модов.</li>"
             }
         };
+
         let currentLang = 'en';
+        window.latestVersion = '';
 
         function toggleLangMenu(event) {
             event.stopPropagation();
@@ -698,7 +667,7 @@
 
         function selectLanguage(lang) {
             currentLang = lang;
-           
+
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`lang-btn-${lang}`).classList.add('active');
 
@@ -709,7 +678,10 @@
             document.getElementById('nav-home').innerText = translations[lang].navHome;
             document.getElementById('nav-about').innerText = translations[lang].navAbout;
             document.getElementById('hero-desc').innerText = translations[lang].heroDesc;
-            document.getElementById('btn-download').innerHTML = translations[lang].btnDownload;
+            
+            const versionText = window.latestVersion ? ' ' + window.latestVersion : '';
+            document.getElementById('btn-download').innerHTML = translations[lang].btnDownload + versionText;
+            
             document.getElementById('btn-donate').innerHTML = translations[lang].btnDonate;
             document.getElementById('title-features').innerText = translations[lang].titleFeatures;
             document.getElementById('title-ux').innerText = translations[lang].titleUx;
@@ -721,7 +693,7 @@
             document.getElementById('role-tester-1').innerText = translations[lang].roleTester;
             document.getElementById('role-tester-2').innerText = translations[lang].roleTester;
             document.getElementById('text-thats-all').innerText = translations[lang].textThatsAll;
-           
+
             document.getElementById('q1').innerText = translations[lang].q1;
             document.getElementById('a1').innerText = translations[lang].a1;
             document.getElementById('q2').innerText = translations[lang].q2;
@@ -732,7 +704,7 @@
             document.getElementById('a4').innerText = translations[lang].a4;
             document.getElementById('q5').innerText = translations[lang].q5;
             document.getElementById('a5').innerText = translations[lang].a5;
-           
+
             document.getElementById('f1-title').innerHTML = translations[lang].f1Title;
             document.getElementById('f1-list').innerHTML = translations[lang].f1List;
             document.getElementById('f2-title').innerHTML = translations[lang].f2Title;
@@ -745,7 +717,7 @@
             document.getElementById('f5-list').innerHTML = translations[lang].f5List;
             document.getElementById('f6-title').innerHTML = translations[lang].f6Title;
             document.getElementById('f6-list').innerHTML = translations[lang].f6List;
-           
+
             document.getElementById('u1-title').innerHTML = translations[lang].u1Title;
             document.getElementById('u1-list').innerHTML = translations[lang].u1List;
             document.getElementById('u2-title').innerHTML = translations[lang].u2Title;
@@ -760,21 +732,15 @@
         function switchPage(pageName) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
-           
             document.getElementById(`page-${pageName}`).classList.add('active');
             document.getElementById(`nav-${pageName}`).classList.add('active');
-           
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleFaq(element) {
             const faqItem = element.parentElement;
             const isActive = faqItem.classList.contains('active');
-           
-            document.querySelectorAll('.faq-item').forEach(item => {
-                item.classList.remove('active');
-            });
-           
+            document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
             if (!isActive) {
                 faqItem.classList.add('active');
             }
@@ -788,13 +754,12 @@
                 'images/wallpaper4.jpg'
             ];
             const randomIndex = Math.floor(Math.random() * wallpapers.length);
-            const selectedWallpaper = wallpapers[randomIndex];
-            document.body.style.backgroundImage = `linear-gradient(rgba(18, 18, 20, 0.85), rgba(18, 18, 20, 0.85)), url('${selectedWallpaper}')`;
+            document.body.style.backgroundImage = `linear-gradient(rgba(18, 18, 20, 0.85), rgba(18, 18, 20, 0.85)), url('${wallpapers[randomIndex]}')`;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             setRandomBackground();
-            
+
             const userLang = navigator.language || navigator.userLanguage;
             if (userLang.startsWith('ru')) {
                 selectLanguage('ru');
@@ -802,18 +767,18 @@
                 selectLanguage('en');
             }
 
-            // Загрузка актуальной версии с GitHub
+            // Загрузка версии и вставка прямо в кнопку
             fetch('https://api.github.com/repos/Txxicu/LoLauncher/releases/latest')
                 .then(response => response.json())
                 .then(data => {
-                    const version = data.tag_name || 'Latest';
-                    const badge = document.getElementById('version-badge');
-                    badge.textContent = version;
-                    badge.classList.remove('loading');
+                    const version = data.tag_name || '';
+                    if (version) {
+                        window.latestVersion = version;
+                        const btn = document.getElementById('btn-download');
+                        btn.innerHTML = translations[currentLang].btnDownload + ' ' + version;
+                    }
                 })
-                .catch(() => {
-                    document.getElementById('version-badge').textContent = 'Latest';
-                });
+                .catch(() => {});
         });
     </script>
 </body>
