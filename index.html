@@ -539,6 +539,20 @@
             font-style: italic;
         }
 
+        @media (max-width: 600px) {
+            .lang-dropdown-container {
+                position: static;
+                display: flex;
+                justify-content: center;
+                margin: 20px auto 0 auto;
+            }
+            .lang-dropdown-menu {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+            }
+        }
+
         /* Scroll reveal animations */
         .reveal {
             opacity: 0;
@@ -552,22 +566,6 @@
     </style>
 </head>
 <body>
-    <div class="lang-dropdown-container" id="langContainer">
-        <button class="lang-current-btn" onclick="toggleLangMenu(event)">
-            <img id="current-lang-flag" src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="Flag">
-            <span id="current-lang-text">EN</span>
-            <i class="fa-solid fa-chevron-down lang-chevron"></i>
-        </button>
-        <div class="lang-dropdown-menu" id="langMenu">
-            <button id="lang-btn-en" class="lang-btn active" onclick="selectLanguage('en')">
-                <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="English"> EN
-            </button>
-            <button id="lang-btn-ru" class="lang-btn" onclick="selectLanguage('ru')">
-                <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/RU.svg" class="flag-icon" alt="Русский"> RU
-            </button>
-        </div>
-    </div>
-
     <nav>
         <a id="nav-home" class="active" onclick="switchPage('home')">Home</a>
         <a id="nav-skins" href="https://ely.by/skins" target="_blank" rel="noopener">Skins</a>
@@ -745,6 +743,22 @@
             </div>
             <p>© 2026 LoLauncher. <span id="footer-rights">All rights reserved.</span></p>
             <p class="disclaimer">Not affiliated with Mojang or Microsoft.</p>
+
+            <div class="lang-dropdown-container" id="langContainer">
+                <button class="lang-current-btn" onclick="toggleLangMenu(event)">
+                    <img id="current-lang-flag" src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="Flag">
+                    <span id="current-lang-text">EN</span>
+                    <i class="fa-solid fa-chevron-down lang-chevron"></i>
+                </button>
+                <div class="lang-dropdown-menu" id="langMenu">
+                    <button id="lang-btn-en" class="lang-btn active" onclick="selectLanguage('en')">
+                        <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg" class="flag-icon" alt="English"> EN
+                    </button>
+                    <button id="lang-btn-ru" class="lang-btn" onclick="selectLanguage('ru')">
+                        <img src="https://purecatamphetamine.github.io/country-flag-icons/3x2/RU.svg" class="flag-icon" alt="Русский"> RU
+                    </button>
+                </div>
+            </div>
         </footer>
     </div>
 
