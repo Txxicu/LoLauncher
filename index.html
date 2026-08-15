@@ -450,6 +450,67 @@
         .member-role.tester-role {
             color: #00bfff;
         }
+        .sponsors-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .sponsor-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 250px;
+            width: 100%;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        .sponsor-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(0,255,136,0.15);
+        }
+
+        .sponsor-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            object-fit: cover;
+            margin-bottom: 15px;
+            box-shadow: 0 0 18px rgba(255,215,0,0.3);
+            user-select: none;
+            -webkit-user-drag: none;
+            transition: transform 0.3s ease;
+        }
+
+        .sponsor-card:hover .sponsor-avatar {
+            transform: scale(1.06);
+        }
+
+        .sponsor-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            margin: 5px 0;
+            user-select: none;
+        }
+
+        .sponsor-role {
+            color: #ffd700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+            user-select: none;
+        }
+
         .thats-all {
             text-align: center;
             margin-top: 60px;
@@ -776,6 +837,20 @@
                     <div class="member-role tester-role" id="role-tester-2">Beta Tester</div>
                 </div>
             </div>
+
+
+            <h2 class="section-title" id="title-sponsors">Sponsors</h2>
+            <div class="sponsors-container">
+                <div class="sponsor-card reveal">
+                    <img src="https://super-web.42web.io/avatars/Romanych_30_6951.jpg"
+                         alt="Romanych"
+                         class="sponsor-avatar"
+                         draggable="false">
+                    <div class="sponsor-name">Romanych</div>
+                    <div class="sponsor-role" id="role-sponsor-1">Sponsor</div>
+                </div>
+            </div>
+
             <div class="thats-all" id="text-thats-all">ну это все))</div>
         </div>
 
@@ -822,9 +897,11 @@
                 titleUx: "User Experience & Comfort",
                 titleTeam: "Project Team",
                 titleTesters: "Testers",
+                titleSponsors: "Sponsors",
                 titleFaq: "Frequently Asked Questions",
                 roleDeveloper: "Lead Developer",
                 roleTester: "Beta Tester",
+                roleSponsor: "Sponsor",
                 textThatsAll: "well, that's all))",
                 footerRights: "All rights reserved.",
                 q1: "Is it free?",
@@ -873,9 +950,11 @@
                 titleUx: "Удобство и UX",
                 titleTeam: "Команда проекта",
                 titleTesters: "Тестеры",
+                titleSponsors: "Спонсоры",
                 titleFaq: "Часто задаваемые вопросы",
                 roleDeveloper: "Главный разработчик",
                 roleTester: "Бета-тестер",
+                roleSponsor: "Спонсор",
                 textThatsAll: "ну это все))",
                 footerRights: "Все права защищены.",
                 q1: "Это бесплатно?",
@@ -953,10 +1032,12 @@
             document.getElementById('footer-rights').innerText = translations[lang].footerRights;
             document.getElementById('title-team').innerText = translations[lang].titleTeam;
             document.getElementById('title-testers').innerText = translations[lang].titleTesters;
+            document.getElementById('title-sponsors').innerText = translations[lang].titleSponsors;
             document.getElementById('title-faq').innerText = translations[lang].titleFaq;
             document.getElementById('role-developer').innerText = translations[lang].roleDeveloper;
             document.getElementById('role-tester-1').innerText = translations[lang].roleTester;
             document.getElementById('role-tester-2').innerText = translations[lang].roleTester;
+            document.getElementById('role-sponsor-1').innerText = translations[lang].roleSponsor;
             document.getElementById('text-thats-all').innerText = translations[lang].textThatsAll;
 
             document.getElementById('q1').innerText = translations[lang].q1;
