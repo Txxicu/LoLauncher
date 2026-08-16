@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://txxicu.github.io/LoLauncher/sitemap.xml
