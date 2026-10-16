@@ -53,24 +53,26 @@
         html {
             scroll-behavior: smooth;
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
+        /* Scrollbar: приглушённый и скрывается, когда не скроллишь */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), #00996b);
+            background-color: transparent;
             border-radius: 10px;
-            border: 3px solid var(--bg-dark);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            transition: background-color 0.4s ease;
+        }
+        html.is-scrolling::-webkit-scrollbar-thumb {
+            background-color: rgba(150, 165, 158, 0.28);
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--primary-hover), #00b37a);
+            background-color: rgba(170, 185, 178, 0.4);
         }
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) var(--bg-dark);
+        /* Firefox */
+        @supports not selector(::-webkit-scrollbar) {
+            html { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+            html.is-scrolling { scrollbar-color: rgba(150, 165, 158, 0.35) transparent; }
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -251,23 +253,40 @@
             flex-wrap: wrap;
         }
         .btn {
+            position: relative;
+            overflow: hidden;
             display: inline-block;
             padding: 14px 35px;
             font-size: 1.1rem;
             font-weight: bold;
             text-decoration: none;
             border-radius: 8px;
-            transition: all 0.25s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
             cursor: pointer;
         }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+        .btn:hover::before { left: 140%; }
+        .btn:hover { transform: scale(1.05); }
+        .btn:active { transform: scale(0.96); }
+
         .btn-primary {
             background-color: var(--primary);
             color: var(--bg-dark);
         }
         .btn-primary:hover {
             background-color: var(--primary-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.4);
         }
         .btn-donate {
             background-color: transparent;
@@ -277,8 +296,7 @@
         .btn-donate:hover {
             background-color: #ff5555;
             color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 85, 85, 0.3);
+            box-shadow: 0 0 25px rgba(255, 85, 85, 0.35);
         }
         .btn-skins {
             background-color: transparent;
@@ -288,8 +306,7 @@
         .btn-skins:hover {
             background-color: #00bfff;
             color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.35);
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.35);
         }
         .win-note {
             margin: 18px auto 0 auto;
@@ -466,6 +483,21 @@
             border-color: transparent;
             box-shadow: none;
         }
+        /* Буква ника, если аватарка не загрузилась */
+        .avatar-fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2a2a30, #1c1c20);
+            color: var(--primary);
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        .member-avatar.tester-av.avatar-fallback { color: #00bfff; }
+        .sponsor-avatar.avatar-fallback { color: #ffd700; }
         .member-name {
             font-size: 1.5rem;
             font-weight: bold;
@@ -1054,7 +1086,7 @@
             document.getElementById('nav-home').innerText = translations[lang].navHome;
             document.getElementById('nav-about').innerText = translations[lang].navAbout;
             document.getElementById('hero-desc').innerText = translations[lang].heroDesc;
-            
+
             const versionText = window.latestVersion ? ' ' + window.latestVersion : '';
             document.getElementById('btn-download').innerHTML = translations[lang].btnDownload + versionText;
             document.getElementById('btn-donate').innerHTML = translations[lang].btnDonate;
@@ -1199,72 +1231,116 @@
             });
         }
 
+        // Если аватарка не загрузилась — показываем первую букву ника
+        function initAvatarFallbacks() {
+            document.querySelectorAll('.member-avatar, .sponsor-avatar').forEach(img => {
+                const replace = () => {
+                    if (!img.parentNode) return;
+                    const div = document.createElement('div');
+                    div.className = img.className + ' avatar-fallback';
+                    div.textContent = (img.alt || '?').trim().charAt(0);
+                    img.replaceWith(div);
+                };
+                img.addEventListener('error', replace, { once: true });
+                // если ошибка загрузки случилась ещё до запуска скрипта
+                if (img.complete && img.naturalWidth === 0) replace();
+            });
+        }
+
+        // Скролл: полоса видна только пока прокручиваешь
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            document.documentElement.classList.add('is-scrolling');
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                document.documentElement.classList.remove('is-scrolling');
+            }, 900);
+        }, { passive: true });
+
         function initDrawArea() {
             const canvas = document.getElementById('drawCanvas');
             const area = canvas ? canvas.parentElement : null;
             const clearBtn = document.getElementById('drawClearBtn');
             if (!canvas || !area) return;
             const ctx = canvas.getContext('2d');
-            let drawing = false;
-            let lastX = 0, lastY = 0;
+            let drawing = false, lastX = 0, lastY = 0, dpr = 1;
 
-            function resizeCanvas() {
-                const rect = area.getBoundingClientRect();
-                const dpr = window.devicePixelRatio || 1;
-                canvas.width = rect.width * dpr;
-                canvas.height = rect.height * dpr;
-                canvas.style.width = rect.width + 'px';
-                canvas.style.height = rect.height + 'px';
-                ctx.scale(dpr, dpr);
+            function setupCtx() {
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 ctx.strokeStyle = '#ffffff';
+                ctx.fillStyle = '#ffffff';
                 ctx.lineWidth = 3;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
             }
 
+            function resizeCanvas() {
+                const rect = area.getBoundingClientRect();
+                if (!rect.width || !rect.height) return;
+                const newDpr = window.devicePixelRatio || 1;
+                const w = Math.round(rect.width * newDpr);
+                const h = Math.round(rect.height * newDpr);
+                if (w === canvas.width && h === canvas.height) return;
+
+                // сохраняем уже нарисованное
+                const backup = document.createElement('canvas');
+                backup.width = canvas.width;
+                backup.height = canvas.height;
+                if (backup.width && backup.height) backup.getContext('2d').drawImage(canvas, 0, 0);
+
+                canvas.width = w;
+                canvas.height = h;
+                dpr = newDpr;
+                setupCtx();
+
+                if (backup.width && backup.height) {
+                    ctx.save();
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    ctx.drawImage(backup, 0, 0);
+                    ctx.restore();
+                }
+            }
+
             function getPos(e) {
                 const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return { x: clientX - rect.left, y: clientY - rect.top };
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
             }
 
-            function startDraw(e) {
+            canvas.addEventListener('pointerdown', (e) => {
                 drawing = true;
+                canvas.setPointerCapture(e.pointerId); // штрих не обрывается у краёв/углов
                 const p = getPos(e);
-                lastX = p.x;
-                lastY = p.y;
-            }
+                lastX = p.x; lastY = p.y;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, ctx.lineWidth / 2, 0, Math.PI * 2);
+                ctx.fill(); // точка при простом клике
+            });
 
-            function moveDraw(e) {
+            canvas.addEventListener('pointermove', (e) => {
                 if (!drawing) return;
-                e.preventDefault();
                 const p = getPos(e);
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY);
                 ctx.lineTo(p.x, p.y);
                 ctx.stroke();
-                lastX = p.x;
-                lastY = p.y;
-            }
+                lastX = p.x; lastY = p.y;
+            });
 
-            function endDraw() {
-                drawing = false;
-            }
-
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousemove', moveDraw);
-            window.addEventListener('mouseup', endDraw);
-            canvas.addEventListener('touchstart', startDraw, { passive: true });
-            canvas.addEventListener('touchmove', moveDraw, { passive: false });
-            canvas.addEventListener('touchend', endDraw);
+            const endDraw = () => { drawing = false; };
+            canvas.addEventListener('pointerup', endDraw);
+            canvas.addEventListener('pointercancel', endDraw);
 
             if (clearBtn) {
                 clearBtn.addEventListener('click', () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.save();
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // чистим весь bitmap целиком
+                    ctx.restore();
                 });
             }
 
+            // следим за реальным размером блока (логотип, шрифты, смена языка и т.д.)
+            if ('ResizeObserver' in window) new ResizeObserver(resizeCanvas).observe(area);
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
         }
@@ -1281,6 +1357,7 @@
 
             initRevealObserver();
             initScreenshotTilt();
+            initAvatarFallbacks();
             initDrawArea();
 
             // Загрузка версии и вставка прямо в кнопку
