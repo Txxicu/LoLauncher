@@ -3,7 +3,7 @@ name: Generate Release GIF Preview
 on:
   release:
     types: [published]
-  workflow_dispatch: # Позволяет запускать запись вручную из вкладки Actions!
+  workflow_dispatch: # Позволяет запускать запись вручную из вкладки Actions
 
 jobs:
   build-and-record-gif:
@@ -14,13 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Настраиваем Java 21
+      # 2. Настраиваем Java 21 (обновлено до v5 без кэширования, чтобы не было ошибок)
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'gradle'
 
       # 3. Даём права на запуск скрипту Gradle
       - name: Grant execute permission for gradlew
@@ -58,13 +57,14 @@ jobs:
           # Ждём завершения сохранения GIF
           wait
 
-      # 6. Сохраняем GIF как артефакт (чтобы скачать руками) и прикрепить к релизу
+      # 6. Сохраняем GIF как артефакт (чтобы скачать прямо из Actions)
       - name: Upload GIF Artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-preview-gif
           path: release_preview.gif
 
+      # 7. Загружаем GIF в релиз (если процесс запущен при публикации нового релиза)
       - name: Attach GIF to Release
         uses: softprops/action-gh-release@v2
         if: github.event_name == 'release'
