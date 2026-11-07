@@ -2,7 +2,8 @@ name: Generate Release GIF Preview
 
 on:
   release:
-    types: [published] # Запускается автоматически при публикации нового релиза на GitHub
+    types: [published]
+  workflow_dispatch: # Позволяет запускать запись вручную из вкладки Actions!
 
 jobs:
   build-and-record-gif:
@@ -57,9 +58,16 @@ jobs:
           # Ждём завершения сохранения GIF
           wait
 
-      # 6. Прикрепляем готовый release_preview.gif к созданному релизу
+      # 6. Сохраняем GIF как артефакт (чтобы скачать руками) и прикрепить к релизу
+      - name: Upload GIF Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-preview-gif
+          path: release_preview.gif
+
       - name: Attach GIF to Release
         uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release'
         with:
           files: release_preview.gif
         env:
