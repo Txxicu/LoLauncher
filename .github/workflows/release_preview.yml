@@ -1,0 +1,66 @@
+name: Generate Release GIF Preview
+
+on:
+  release:
+    types: [published] # Запускается автоматически при публикации нового релиза на GitHub
+
+jobs:
+  build-and-record-gif:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Скачиваем исходный код репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Настраиваем Java 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      # 3. Даём права на запуск скрипту Gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. Устанавливаем виртуальный монитор (Xvfb), ffmpeg для GIF и xdotool
+      - name: Install Display & Recording Utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb ffmpeg xdotool libxrender1 libxtst6 libxi6
+
+      # 5. Запускаем лаунчер в виртуальном экране и записываем GIF
+      - name: Launch App and Record GIF
+        run: |
+          # Создаём виртуальный экран с разрешением 1280x800
+          Xvfb :99 -screen 0 1280x800x24 &
+          export DISPLAY=:99
+          
+          # Запускаем сборку и запуск Compose Desktop лаунчера
+          ./gradlew run &
+          
+          # Ждём 8 секунд запуска лаунчера
+          sleep 8
+
+          # Запускаем запись экрана в GIF (10 секунд видео)
+          ffmpeg -f x11grab -video_size 1280x800 -i :99 -t 10 -vf "fps=12,scale=800:-1:flags=lanczos" -loop 0 release_preview.gif &
+          
+          # Эмулируем действия мыши по экрану
+          sleep 2
+          xdotool mousemove 640 400 click 1
+          sleep 2
+          xdotool mousemove 500 300
+          sleep 4
+
+          # Ждём завершения сохранения GIF
+          wait
+
+      # 6. Прикрепляем готовый release_preview.gif к созданному релизу
+      - name: Attach GIF to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release_preview.gif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
